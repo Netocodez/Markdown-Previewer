@@ -54,6 +54,48 @@ cd Markdown-Previewer
 
 
     
+## App Logic / How It Works
+
+This project is built as a single functional React component:
+
+### State (useState)
+  Stores the current Markdown text entered by the user.
+
+### Markdown Parsing (marked)
+  Marked is configured at the top of the file with:
+
+`marked.setOptions({ gfm: true, breaks: true });`
+
+This enables GitHub Flavored Markdown and automatic line breaks.
+
+### Memoization (useMemo)
+We use:
+`const html = useMemo(() => marked.parse(text), [text]);`
+so the Markdown text is only parsed to HTML when the text state changes (performance optimization).
+
+### Editor Panel
+A <textarea> bound to text:
+
+```
+<textarea
+  id="editor"
+  value={text}
+  onChange={(e) => setText(e.target.value)}
+/>
+```
+
+### Preview Panel
+Renders the HTML returned by Marked using React’s dangerouslySetInnerHTML:
+```
+<div id="preview" dangerouslySetInnerHTML={{ __html: html }} />
+```
+
+###Styling
+App.css defines a simple split layout with panel headers, “traffic” dots, and a footer. You can customize it for your own theme.
+
+The result: as you type Markdown, the text state updates, marked converts it to HTML, and the preview updates instantly.
+
+
 ## Usage/Examples
 
 - Type Markdown in the Editor pane (left).
